@@ -110,7 +110,7 @@ doeclimF = function(
 	# call Fortran DOECLIM
 	# doeclim.so must be already dynamically loaded (see above this function)
 	fout = .Fortran( "run_doeclim",
-	    start_year = begyear,
+	    start_year = as.integer(mod.time[1]),
 			ns = n,
 			time_out = as.double(mod.time),
 			forcing_in = as.double(forcing.total),

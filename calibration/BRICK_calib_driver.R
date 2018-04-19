@@ -393,6 +393,9 @@ amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc,
                   bound.upper.in=bound.upper     , shape.in=shape.invtau      , scale.in=scale.invtau         ,
                   luse.brick=luse.brick          , i0=i0                      , l.aisfastdy=l.aisfastdy       )
 t.end=proc.time()                      # save timing
+chain1 = amcmc.par1[[1]]$samples
+summary(chain1)
+print(paste0("acceptance rate: ", amcmc.par1[[1]]$acceptance.rate))
 }
 
 if(luse.sneasy) {cleanup.sneasy()}  # deallocates memory after SNEASY is done
