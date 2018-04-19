@@ -198,6 +198,8 @@ log.lik = function( parameters.in,
     } else {
       llik.te = -Inf
     }
+    plot(obs$sl[oidx$sl]-mean(obs$sl[oidx$sl[1:20]]))
+    lines(brick.out$te.out[midx$sl]-mean(brick.out$te.out[midx$sl[1:20]]))
   }
 
   ## Calculate contribution from SIMPLE (Greenland Ice Sheet)
@@ -287,7 +289,6 @@ log.pri = function(parameters.in , parnames.in, bound.lower.in, bound.upper.in,
 	} else {
 		lpri = -Inf
 	}
-
 	return(lpri)
 }
 ##==============================================================================
@@ -317,7 +318,7 @@ log.post = function(  parameters.in,
                       i0,
                       l.aisfastdy=TRUE
                       ){
-
+  print(parameters.in)
   llik = 0
 	lpri = log.pri( parameters.in=parameters.in,
                   parnames.in=parnames.in,
