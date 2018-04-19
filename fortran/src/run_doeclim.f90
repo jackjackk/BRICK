@@ -1,4 +1,4 @@
-SUBROUTINE run_doeclim(ns, time_out, forcing_in, t2co_in, kappa_in, temp_out, &
+SUBROUTINE run_doeclim(start_year, ns, time_out, forcing_in, t2co_in, kappa_in, temp_out, &
                         heatflux_mixed_out, heatflux_interior_out)
 
     USE global
@@ -6,6 +6,7 @@ SUBROUTINE run_doeclim(ns, time_out, forcing_in, t2co_in, kappa_in, temp_out, &
 
     implicit none
 
+    integer(i4b), intent(IN) :: start_year
     integer(i4b), intent(IN) :: ns
     real(DP), intent(IN) :: t2co_in
     real(DP), intent(IN) :: kappa_in
@@ -16,7 +17,6 @@ SUBROUTINE run_doeclim(ns, time_out, forcing_in, t2co_in, kappa_in, temp_out, &
     real(DP), dimension(ns), intent(OUT) :: heatflux_interior_out
 
     integer(i4b) :: i
-    integer(i4b) :: start_year = 1850
 
 ! Assign global variables.
     nsteps = ns
