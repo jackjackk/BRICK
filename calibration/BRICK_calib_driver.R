@@ -381,6 +381,18 @@ if(opt$mode == "mcmc") {
 ##==============================================================================
 ## Actually run the calibration
 t.beg=proc.time()                    # save timing (running millions of iterations so best to have SOME idea...)
+if(nnode.mcmc == 1) {
+amcmc.out1 = MCMC(log.post, niter.mcmc, p0.deoptim, scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
+                  gamma=gamma.mcmc               , list=TRUE                  , n.start=round(0.01*niter.mcmc),
+                  parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
+                  #slope.Ta2Tg.in=slope.Ta2Tg    , intercept.Ta2Tg.in=intercept.Ta2Tg,
+                  ind.norm.data=ind.norm.data    , ind.norm.sl=ind.norm       , mod.time=mod.time             ,
+                  oidx = oidx.all                , midx = midx.all            , obs=obs.all                   ,
+                  obs.err = obs.err.all          , trends.te = trends.te      , bound.lower.in=bound.lower    ,
+                  bound.upper.in=bound.upper     , shape.in=shape.invtau      , scale.in=scale.invtau         ,
+                  luse.brick=luse.brick          , i0=i0                      , l.aisfastdy=l.aisfastdy       )
+amcmc.par1 = list(amcmc.out1)
+} else {
 amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc, n.cpu=nnode.mcmc,
                   dyn.libs=c('../fortran/doeclim.so','../fortran/brick_te.so','../fortran/brick_tee.so','../fortran/gsic_magicc.so','../fortran/simple.so'),
                   scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
@@ -392,10 +404,12 @@ amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc,
                   obs.err = obs.err.all          , trends.te = trends.te      , bound.lower.in=bound.lower    ,
                   bound.upper.in=bound.upper     , shape.in=shape.invtau      , scale.in=scale.invtau         ,
                   luse.brick=luse.brick          , i0=i0                      , l.aisfastdy=l.aisfastdy       )
+amcmc.out1 = amcmc.par1[[1]]
+}
 t.end=proc.time()                      # save timing
-chain1 = amcmc.par1[[1]]$samples
+chain1 = amcmc.out1$samples
 summary(chain1)
-print(paste0("acceptance rate: ", amcmc.par1[[1]]$acceptance.rate))
+print(paste0("acceptance rate: ", amcmc.out1$acceptance.rate))
 }
 
 if(luse.sneasy) {cleanup.sneasy()}  # deallocates memory after SNEASY is done
