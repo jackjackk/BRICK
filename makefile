@@ -34,15 +34,15 @@ MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000
 MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 100 -N 2 -d 1
 
 test:
-	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 1000 -N 2 -d 1
+	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2
 
 test_runs: 
-	$(MCMC_TEST)
-	$(MCMC_TEST) -z 1900 -Z 1929
-	$(MCMC_TEST) -z 1900 -Z 1929 -t 1880 
-	$(MCMC_TEST) -z 1900 -Z 1929 -t 1880 -T 2009 -f giss
-	$(MCMC_TEST) -z 1900 -Z 1929 -t 1880 -T 2011 -f giss
-	$(MCMC_TEST) -z 1900 -Z 1929 -t 1880 -T 2015 -f giss
+	$(MCMC_TEST) -d 1 
+	$(MCMC_TEST) -z 1900 -Z 1929 -d 1
+	$(MCMC_TEST) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 
+	$(MCMC_TEST) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f giss
+	$(MCMC_TEST) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss
+	$(MCMC_TEST) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2015 -f giss
 
 clean:
 	rm -v scratch/*.rds 
