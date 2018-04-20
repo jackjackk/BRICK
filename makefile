@@ -53,6 +53,9 @@ all_runs:
 1880_runs:
 	for X in {urban_t1880,giss_T2009,giss_T2011,giss_T2015}; do qmake $${X} 4 16; done
 
+1850_runs:
+	for X in {default,urban_z1900}; do qmake $${X} 4 16; done
+
 default:
 	$(MCMC)
 
@@ -60,28 +63,28 @@ urban_z1900:
 	$(MCMC) -z 1900 -Z 1929
 
 urban_t1880:
-	$(MCMC) -z 1900 -Z 1929 -t 1880 
+	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 
 
 giss_T2009:
-	$(MCMC) -z 1900 -Z 1929 -t 1880 -T 2009 -f giss
+	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f giss
 
 giss_T2011:
-	$(MCMC) -z 1900 -Z 1929 -t 1880 -T 2011 -f giss
+	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss
 
 giss_T2015:
-	$(MCMC) -z 1900 -Z 1929 -t 1880 -T 2015 -f giss
+	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2015 -f giss
 
 
 ### POST-PROCESS
 
 RDS_FILES := $(wildcard $(RESDIR)*_mcmc_f*000000.rds)
 RDS_GRTEST_FILES := $(patsubst %.rds,%_grtest.rds,$(RDS_FILES))
-NC_FILES := $(patsubst %.rds,%_b5_t10000_.nc,$(RDS_FILES))
+NC_FILES := $(patsubst %.rds,%_b5_t100_n1.nc,$(RDS_FILES))
 
 nc: $(NC_FILES)
 
-%.nc: %.rds
-	Rscript --vanilla calibration/rds2nc.R -r $<
+%_b5_t100_n1.nc: %.rds
+	Rscript --vanilla calibration/rds2nc.R -t 100 -r $<
 
 ncthin:
 	Rscript --vanilla calibration/rds2nc.R -r 
@@ -92,4 +95,4 @@ grtest: $(RDS_GRTEST_FILES)
 	Rscript --vanilla calibration/rds2grtest.R -r $<
 
 move2data:
-	mv -v $(HOME)/$(BASENAME)/scratch/ *.rds $(HOME)/$(BASENAME)/results/
+	mv -v $(HOME)/$(BASENAME)/scratch/*.rds $(HOME)/$(BASENAME)/results/
