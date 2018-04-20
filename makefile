@@ -31,7 +31,7 @@ init: scratch results
 
 R := /usr/bin/Rscript --vanilla
 MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000000 -N 4
-MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 100 -N 2 -d 1
+MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000 -N 2
 
 test:
 	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2

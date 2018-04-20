@@ -44,10 +44,10 @@
 # HADCRUT4 annual global mean surface temperature
 # Note: all ensemble member files have same time series of ucnertainties, so just
 # grabbing the first one.
-dat = read.table("../data/HadCRUT.4.6.0.0.annual_ns_avg.txt")
+dat = read.table(sprintf("../data/HadCRUT.4.%d.0.0.annual_ns_avg.txt", opt$hadcrutv))
 obs.temp = dat[,2]
 obs.temp.time = dat[,1]
-dat = read.table("../data/HadCRUT.4.6.0.0.annual_ns_avg_realisations/HadCRUT.4.6.0.0.annual_ns_avg.1.txt")
+dat = read.table(sprintf("../data/HadCRUT.4.%d.0.0.annual_ns_avg_realisations/HadCRUT.4.%d.0.0.annual_ns_avg.1.txt", opt$hadcrutv, opt$hadcrutv))
 obs.temp.err = dat[,3]
 
 # Normalize temperature anomaly so 1961-1990 mean is 0
