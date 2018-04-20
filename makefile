@@ -34,7 +34,7 @@ MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000
 MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 100 -N 2 -d 1
 
 test:
-	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 1000 -N 2 -d 10
+	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 1000 -N 2 -d 1
 
 test_runs: 
 	$(MCMC_TEST)

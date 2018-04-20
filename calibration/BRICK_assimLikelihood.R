@@ -254,6 +254,7 @@ if(FALSE) {
 }
 	# Assume residual time series are independent
   llik = llik.temp + llik.ocheat + llik.gsic + llik.te + llik.simple + llik.dais + llik.sl
+  print(c(llik,llik.temp,llik.ocheat,llik.gsic,llik.te,llik.simple,llik.dais,llik.sl))
 
 	return(llik)
 }
@@ -289,6 +290,8 @@ log.pri = function(parameters.in , parnames.in, bound.lower.in, bound.upper.in,
 	} else {
 		lpri = -Inf
 	}
+    df=data.frame(v0=p0, v=parameters.in, lo=bound.lower.in, up=bound.upper.in, row.names=parnames.in)
+    print(df[!in.range.vec,])
 	return(lpri)
 }
 ##==============================================================================
@@ -318,7 +321,7 @@ log.post = function(  parameters.in,
                       i0,
                       l.aisfastdy=TRUE
                       ){
-  print(parameters.in)
+  #print(parameters.in)
   llik = 0
 	lpri = log.pri( parameters.in=parameters.in,
                   parnames.in=parnames.in,
