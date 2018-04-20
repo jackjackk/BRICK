@@ -352,6 +352,7 @@ log.post = function(  parameters.in,
   } else {
   	lpost = -Inf
   }
+  print(c(llik,lpri,lpost))
   return(lpost)
 }
 ##==============================================================================
