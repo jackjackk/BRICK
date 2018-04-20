@@ -33,10 +33,11 @@ option_list = list(
   make_option(c("-m", "--mode"), type="character", default="mcmc", help="choose between {mcmc,post}"),
   make_option(c("-n", "--niter"), type="integer", default=100, help="number of iterations"),
   make_option(c("-N", "--nnode"), type="integer", default=2, help="number of chains"),
-  make_option(c("-d", "--deoptim_iter"), type="integer", default=200, help="number of iterations"),
+  make_option(c("-d", "--deoptim_iter"), type="character", default="200", help="number of DEoptim iterations / xxx.rds from which load posterior mean to use as starting point"),
   make_option(c("-u", "--odup"), type="integer", default=4, help="ocean diffusivity upper bound"),
   make_option(c("-t", "--begyear"), type="integer", default=1850, help="start year of calibration"),
   make_option(c("-T", "--endyear"), type="integer", default=2009, help="end year of calibration"),
+  make_option(c("-v", "--hadcrutv"), type="integer", default=4, help="version of HadCRUT dataset for temperature"),
   make_option(c("-f", "--forcing"), type="character", default="urban", help="forcing dataset in {urban,giss}"),
   make_option(c("-s", "--sprior"), type="character", default="inf", help="prior for climate sensitivity in {inf, uninf}"),
   make_option(c("-x", "--save"), type="character", default="rds", help="save either via 'workspace' or 'rds'"),
@@ -54,6 +55,17 @@ opt = parse_args(opt_parser);
 
 ## Create output dir
 dir.create(opt$outdir)
+
+rdsfile = sprintf("%s/brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_n%d.rds",
+                     opt$outdir,
+                     opt$forcing,
+                     opt$sprior,
+                     opt$begyear,
+                     opt$endyear,                     
+                     opt$firstnormyear,
+                     opt$lastnormyear,
+                     opt$odup,
+                     opt$niter)
 
 ## Set up MCMC stuff here so that it can be automated for HPC
 nnode_mcmc000 <- opt$nnode
@@ -221,7 +233,12 @@ if(luse.sneasy) {
 if(l.project) {
   forcing = read.csv( '../data/forcing_rcp85.csv', header=TRUE )
 } else {
-  forcing = read.csv(sprintf('../data/forcing_hindcast_%s.csv', opt$forcing), header=TRUE )
+    if(opt$forcing == "urban") {
+        forcsuff = ""
+    } else {
+        forcsuff = sprintf("_%s", opt$forcing)
+    }
+  forcing = read.csv(sprintf('../data/forcing_hindcast%s.csv', forcsuff), header=TRUE )
 }
 
 }
@@ -241,10 +258,12 @@ source('../R/BRICK_coupledModel.R')
 ##TODO -- causes problems in optimization.
 ##TODO
 
+
 library(DEoptim)
-source('../calibration/BRICK_DEoptim.R')
 p0.deoptim=p0                          # initialize optimized initial parameters
-niter.deoptim=opt$deoptim_iter         # number of iterations for DE optimization
+niter.deoptim=suppressWarnings(as.numeric(opt$deoptim_iter))         # number of iterations for DE optimization
+if(!is.na(niter.deoptim)) {
+source('../calibration/BRICK_DEoptim.R')
 NP.deoptim=11*length(index.model)      # population size for DEoptim (do at least 10*[N parameters])
 F.deoptim=0.8                          # as suggested by Storn et al (2006)
 CR.deoptim=0.9                        # as suggested by Storn et al (2006)
@@ -257,6 +276,11 @@ outDEoptim <- DEoptim(minimize_residuals_brick, bound.lower[index.model], bound.
         obs=obs.all                      , obs.err = obs.err.all     , trends.te = trends.te    ,
         luse.brick = luse.brick           , i0 = i0                   , l.aisfastdy = l.aisfastdy )
 p0.deoptim[index.model] = outDEoptim$optim$bestmem
+} else {
+    amcmc.par1 = readRDS(opt$deoptim_iter)
+    chain1 = amcmc.par1[[1]]$samples
+    p0.deoptim = colMeans(chain1)
+}
 
 ## Run the model and examine output at these parameter values
 brick.out = brick_model(parameters.in=p0.deoptim,
@@ -381,7 +405,18 @@ if(opt$mode == "mcmc") {
 ##==============================================================================
 ## Actually run the calibration
 t.beg=proc.time()                    # save timing (running millions of iterations so best to have SOME idea...)
-if(nnode.mcmc == 1) {
+    if(nnode.mcmc == 1) {
+        if(identical(head(strsplit(basename(opt$deoptim_iter),"_")[[1]], -1), head(strsplit(basename(rdsfile),"_")[[1]], -1))) {
+print(sprintf("Extending MCMC chain in %s", opt$deoptim_iter))
+amcmc.out1 = MCMC.add.samples(amcmc.par1[[1]], niter.mcmc,
+                    parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
+                    #slope.Ta2Tg.in=slope.Ta2Tg    , intercept.Ta2Tg.in=intercept.Ta2Tg,
+                    ind.norm.data=ind.norm.data    , ind.norm.sl=ind.norm       , mod.time=mod.time              ,
+                    oidx = oidx.all                , midx = midx.all            , obs=obs.all                    ,
+                    obs.err = obs.err.all          , trends.te = trends.te      , bound.lower.in=bound.lower     ,
+                    bound.upper.in=bound.upper     , shape.in=shape.invtau      , scale.in=scale.invtau          ,
+                    luse.brick=luse.brick          , i0=i0                      , l.aisfastdy=l.aisfastdy        )
+} else {
 amcmc.out1 = MCMC(log.post, niter.mcmc, p0.deoptim, scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
                   gamma=gamma.mcmc               , list=TRUE                  , n.start=round(0.01*niter.mcmc),
                   parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
@@ -391,6 +426,7 @@ amcmc.out1 = MCMC(log.post, niter.mcmc, p0.deoptim, scale=step.mcmc, adapt=TRUE,
                   obs.err = obs.err.all          , trends.te = trends.te      , bound.lower.in=bound.lower    ,
                   bound.upper.in=bound.upper     , shape.in=shape.invtau      , scale.in=scale.invtau         ,
                   luse.brick=luse.brick          , i0=i0                      , l.aisfastdy=l.aisfastdy       )
+}
 amcmc.par1 = list(amcmc.out1)
 } else {
 amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc, n.cpu=nnode.mcmc,
@@ -418,32 +454,14 @@ if(opt$save == "workspace") {
 ## Save workspace image - you do not want to re-simulate all those!
 save.image(file=filename.saveprogress)
 } else if (opt$save == "rds") {
-saveRDS(file=sprintf("%s/brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_n%d.rds",
-                                 opt$outdir,
-                                 opt$forcing,
-                                 opt$sprior,
-                                 begyear,
-                                 endyear,
-                                 opt$firstnormyear,
-                                 opt$lastnormyear,
-                                 opt$odup,
-                                 niter.mcmc), amcmc.par1)
+saveRDS(file=rdsfile, amcmc.par1)
 }
 
 if (opt$mode == "post") {
 
 if (opt$save == "rds") {
 ##==============================================================================
-    amcmc.par1 = readRDS(sprintf("%s/brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_n%d.rds",
-                                 opt$outdir,
-                                 opt$forcing,
-                                 opt$sprior,
-                                 begyear,
-                                 endyear,
-                                 opt$firstnormyear,
-                                 opt$lastnormyear,
-                                 opt$odup,
-                                 niter.mcmc))
+    amcmc.par1 = readRDS(rdsfile)
 } else {
     stop("Not implemented yet")
 }
