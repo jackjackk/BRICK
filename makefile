@@ -16,13 +16,12 @@ sync:
 	$(ERSYNC) ./ acid:$(BASENAME)/
 
 res:
-	$(RSYNC) "acid:$(BASENAME)/results/*n$(NITER)*t$(NTHIN)*.nc" $(RESDIR)
+	$(RSYNC) "acid:$(BASENAME)/results/*n1000000*.nc" $(RESDIR)
 
 scratch:
 	mkdir -p $(HOME)/scratch/$(BASENAME)
 	rm -fv scratch
 	ln -s $(HOME)/scratch/$(BASENAME) scratch
-
 
 results:
 	mkdir -p $(HOME)/group/$(BASENAME)
@@ -33,9 +32,15 @@ init: scratch results
 
 ### RUN ###
 
-R := /usr/bin/Rscript --vanilla
+R := $$(which Rscript) --vanilla
 MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n $(NITER) -N 4
+MCMC1M := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 1000000 -N 4
 MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000 -N 2
+
+bounds: results/bounds.csv
+
+results/bounds.csv:
+	cd calibration && $(R) write_bounds.R -m none
 
 test:
 	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2
@@ -82,16 +87,39 @@ giss_T2015_od10:
 	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2015 -f giss -u 10
 
 
+# h0
+giss_T2011_h50:
+	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 50 -u 10
+
+giss_T2011_h100:
+	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 100 -u 10
+
+giss_T2011_h150:
+	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 150 -u 10
+
+h0_runs:
+	for X in giss_T2011_h{50,100,150}; do qmake $${X} 4 16; done
+
+
 ### POST-PROCESS
 
-RDS_FILES := $(wildcard $(RESDIR)*_mcmc_f*$(NITER).rds)
+RDS_FILES := $(wildcard $(RESDIR)*_mcmc_f*10000000.rds)
 RDS_GRTEST_FILES := $(patsubst %.rds,%_grtest.rds,$(RDS_FILES))
-NC_FILES := $(patsubst %.rds,%_b5_t$(NTHIN)_n1.nc,$(RDS_FILES))
+NC_FILES := $(patsubst %.rds,%_b5_t1000_n1.nc,$(RDS_FILES))
 
-nc: $(NC_FILES)
+RDS_FILES2 := $(wildcard $(RESDIR)*_mcmc_f*1000000.rds)
+NC_FILES2 := $(patsubst %.rds,%_b5_t100_n1.nc,$(RDS_FILES2))
 
-%_b5_t$(NTHIN)_n1.nc: %.rds
-	Rscript --vanilla calibration/rds2nc.R -t $(NTHIN) -r $<
+nc: $(NC_FILES) $(NC_FILES2)
+
+%_b5_t1000_n1.nc: %.rds
+	Rscript --vanilla calibration/rds2nc.R -t 1000 -r $<
+
+%_b5_t100_n1.nc: %.rds
+	Rscript --vanilla calibration/rds2nc.R -t 100 -r $<
+
+nctest:
+	Rscript --vanilla calibration/rds2nc.R -t 100 -r results/brick_mcmc_furban_sinf_t18802009_z19001929_o4_n1000000.rds
 
 ncthin:
 	Rscript --vanilla calibration/rds2nc.R -r 

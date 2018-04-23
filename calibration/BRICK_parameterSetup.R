@@ -31,11 +31,11 @@ if(luse.doeclim & luse.sneasy) {
 parnames.doeclim   =NULL; p0.doeclim       =NULL; bound.lower.doeclim=NULL;
 bound.upper.doeclim=NULL; step.mcmc.doeclim=NULL; index.model.doeclim=NULL;
 if (luse.doeclim) {
-	parnames.doeclim   =c("S" ,"kappa.doeclim","alpha.doeclim","T0"  ,"H0" ,"sigma.T","sigma.H","rho.T","rho.H")	# parameters names
-	p0.doeclim         =c(3.1 , 3.5   , 1.1           , -0.06, -33 , 0.1     , 2       , 0.55  , 0.9   )	# initial parameter guesses
-	bound.lower.doeclim=c(0.1 , 0.1   , 0             , -0.3 , -50 , 0.05    , 0.1     , 0     , 0     )	# prior range lower bounds
-	bound.upper.doeclim=c(10  , opt$odup, 2             ,  0.3 ,   0 , 5       , 10      , 0.999 , 0.999 )	# prior range upper bounds
-	step.mcmc.doeclim  =c(0.16, 0.17  ,0.025          ,0.003 , 0.9 , 5e-4    , 0.025   , 0.007 , 0.006 )	# step size for parameters in MCMC (proposals)
+	parnames.doeclim   =c("S" ,"kappa.doeclim","alpha.doeclim","T0"  ,"H0"        ,"sigma.T","sigma.H","rho.T","rho.H")	# parameters names
+	p0.doeclim         =c(3.1 , 3.5           , 1.1           , -0.06, -33        , 0.1     , 2       , 0.55  , 0.9   )	# initial parameter guesses
+	bound.lower.doeclim=c(0.1 , 0.1           , 0             , -0.3 , -opt$hzero , 0.05    , 0.1     , 0     , 0     )	# prior range lower bounds
+	bound.upper.doeclim=c(10  , opt$odup      , 2             ,  0.3 ,  opt$hzero , 5       , 10      , 0.999 , 0.999 )	# prior range upper bounds
+	step.mcmc.doeclim  =c(0.16, 0.17          ,0.025          ,0.003 , 0.9        , 5e-4    , 0.025   , 0.007 , 0.006 )	# step size for parameters in MCMC (proposals)
 	index.model.doeclim=c(1,2,3,4,5)		# which are model parameters? (index within parnames.doeclim)
 }
 

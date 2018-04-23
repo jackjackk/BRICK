@@ -35,6 +35,7 @@ option_list = list(
   make_option(c("-N", "--nnode"), type="integer", default=2, help="number of chains"),
   make_option(c("-d", "--deoptim_iter"), type="character", default="200", help="number of DEoptim iterations / xxx.rds from which load posterior mean to use as starting point"),
   make_option(c("-u", "--odup"), type="integer", default=4, help="ocean diffusivity upper bound"),
+  make_option(c("-H", "--hzero"), type="integer", default=50, help="initial ocean heat uptake +/- bound"),
   make_option(c("-t", "--begyear"), type="integer", default=1850, help="start year of calibration"),
   make_option(c("-T", "--endyear"), type="integer", default=2009, help="end year of calibration"),
   make_option(c("-v", "--hadcrutv"), type="integer", default=4, help="version of HadCRUT dataset for temperature"),
@@ -49,15 +50,17 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
+print(str(opt))
+
 ## Switch to your BRICK calibration directory
 #setwd('/home/scrim/axw322/codes/BRICK/calibration')
 #setwd('/Users/tony/codes/BRICK/calibration')
 
-## Create output dir
-dir.create(opt$outdir)
+## Check output dir
+stopifnot(dir.exists(opt$outdir))
 
-rdsfile = sprintf("%s/brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_n%d.rds",
-                     opt$outdir,
+## Build output file path
+rdsfile = sprintf("brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_h%d_n%d.rds",
                      opt$forcing,
                      opt$sprior,
                      opt$begyear,
@@ -65,7 +68,9 @@ rdsfile = sprintf("%s/brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_n%d.rds",
                      opt$firstnormyear,
                      opt$lastnormyear,
                      opt$odup,
-                     opt$niter)
+                     opt$hzero,
+                  opt$niter)
+print(rdsfile)
 
 ## Set up MCMC stuff here so that it can be automated for HPC
 nnode_mcmc000 <- opt$nnode
@@ -267,6 +272,7 @@ source('../calibration/BRICK_DEoptim.R')
 NP.deoptim=11*length(index.model)      # population size for DEoptim (do at least 10*[N parameters])
 F.deoptim=0.8                          # as suggested by Storn et al (2006)
 CR.deoptim=0.9                        # as suggested by Storn et al (2006)
+if(opt$mode == "mcmc") {
 outDEoptim <- DEoptim(minimize_residuals_brick, bound.lower[index.model], bound.upper[index.model],
         DEoptim.control(NP=NP.deoptim,itermax=niter.deoptim,F=F.deoptim,CR=CR.deoptim,trace=FALSE),
         parnames.in=parnames[index.model], forcing.in=forcing        , l.project=l.project      ,
@@ -276,6 +282,7 @@ outDEoptim <- DEoptim(minimize_residuals_brick, bound.lower[index.model], bound.
         obs=obs.all                      , obs.err = obs.err.all     , trends.te = trends.te    ,
         luse.brick = luse.brick           , i0 = i0                   , l.aisfastdy = l.aisfastdy )
 p0.deoptim[index.model] = outDEoptim$optim$bestmem
+}
 } else {
     amcmc.par1 = readRDS(opt$deoptim_iter)
     chain1 = amcmc.par1[[1]]$samples
@@ -354,6 +361,8 @@ if(luse.te) {
   NP.deoptim=50             # population size for DEoptim (do at least 10*[N parameters])
   F.deoptim=0.8             # as suggested by Storn et al (2006)
   CR.deoptim=0.9            # as suggested by Storn et al (2006)
+
+  if(opt$mode == "mcmc") {
   outDEoptim <- DEoptim(rmse.quantiles, c(0,0), c(100,100),
                         DEoptim.control(NP=NP.deoptim,itermax=niter.deoptim,F=F.deoptim,
             CR=CR.deoptim,trace=FALSE),  q05.in=q05, q95.in=q95)
@@ -361,6 +370,7 @@ if(luse.te) {
   scale.invtau = outDEoptim$optim$bestmem[2]
   print(paste('shape.invtau=',shape.invtau,' (1.81?)'))
   print(paste('scale.invtau=',scale.invtau,' (0.00275?)'))
+  }
 
   ## This should yield results somewhere in the ballpark of
   ##
@@ -446,19 +456,20 @@ t.end=proc.time()                      # save timing
 chain1 = amcmc.out1$samples
 summary(chain1)
 print(paste0("acceptance rate: ", amcmc.out1$acceptance.rate))
-}
 
 if(luse.sneasy) {cleanup.sneasy()}  # deallocates memory after SNEASY is done
 
+setwd(opt$outdir)
 if(opt$save == "workspace") {
 ## Save workspace image - you do not want to re-simulate all those!
 save.image(file=filename.saveprogress)
 } else if (opt$save == "rds") {
-saveRDS(file=rdsfile, amcmc.par1)
+saveRDS(amcmc.par1, file=rdsfile)
+}
 }
 
 if (opt$mode == "post") {
-
+setwd(opt$outdir)
 if (opt$save == "rds") {
 ##==============================================================================
     amcmc.par1 = readRDS(rdsfile)

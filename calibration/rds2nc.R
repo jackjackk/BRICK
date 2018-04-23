@@ -11,7 +11,7 @@ opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
 #rdsfile = "results/doeclim_mcmc_ftony_e2009_t1929_o4_n10000000.rds"
-parnames   =c("S" ,"kappa.doeclim","alpha.doeclim","T0"  ,"H0" ,"sigma.T","sigma.H","rho.T","rho.H")	# parameters names
+parnames   =c("S", "kappa.doeclim", "alpha.doeclim", "T0", "H0", "beta0", "V0.gsic", "n", "Gs0", "a.te", "b.te", "invtau.te", "TE0", "a.simple", "b.simple", "alpha.simple", "beta.simple", "V0", "sigma.T", "sigma.H", "rho.T", "rho.H", "sigma.gsic", "rho.gsic", "sigma.simple", "rho.simple")
 
 amcmc.par1 = readRDS(opt$rdsfile)
 #amcmc.par1 = readRDS(rdsfile)
