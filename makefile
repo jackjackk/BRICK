@@ -74,6 +74,9 @@ giss_T2011:
 giss_T2015:
 	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2015 -f giss
 
+giss_T2015_od10:
+	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2015 -f giss -u 10
+
 
 ### POST-PROCESS
 
