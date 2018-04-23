@@ -1,3 +1,8 @@
+### SETUP ###
+
+NITER := 10000000
+NTHIN := 1000
+
 ### ADMIN ###
 
 SHELL := /bin/bash
@@ -11,8 +16,7 @@ sync:
 	$(ERSYNC) ./ acid:$(BASENAME)/
 
 res:
-	mkdir -p tmp
-	$(RSYNC) --partial-dir=tmp "acid:$(BASENAME)/results/*.rds" $(RESDIR)
+	$(RSYNC) "acid:$(BASENAME)/results/*n$(NITER)*t$(NTHIN)*.nc" $(RESDIR)
 
 scratch:
 	mkdir -p $(HOME)/scratch/$(BASENAME)
@@ -30,7 +34,7 @@ init: scratch results
 ### RUN ###
 
 R := /usr/bin/Rscript --vanilla
-MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000000 -N 4
+MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n $(NITER) -N 4
 MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000 -N 2
 
 test:
@@ -80,14 +84,14 @@ giss_T2015_od10:
 
 ### POST-PROCESS
 
-RDS_FILES := $(wildcard $(RESDIR)*_mcmc_f*000000.rds)
+RDS_FILES := $(wildcard $(RESDIR)*_mcmc_f*$(NITER).rds)
 RDS_GRTEST_FILES := $(patsubst %.rds,%_grtest.rds,$(RDS_FILES))
-NC_FILES := $(patsubst %.rds,%_b5_t100_n1.nc,$(RDS_FILES))
+NC_FILES := $(patsubst %.rds,%_b5_t$(NTHIN)_n1.nc,$(RDS_FILES))
 
 nc: $(NC_FILES)
 
-%_b5_t100_n1.nc: %.rds
-	Rscript --vanilla calibration/rds2nc.R -t 100 -r $<
+%_b5_t$(NTHIN)_n1.nc: %.rds
+	Rscript --vanilla calibration/rds2nc.R -t $(NTHIN) -r $<
 
 ncthin:
 	Rscript --vanilla calibration/rds2nc.R -r 
