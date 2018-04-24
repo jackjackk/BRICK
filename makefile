@@ -89,16 +89,28 @@ giss_T2015_od10:
 
 # h0
 giss_T2011_h50:
-	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 50 -u 10
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 50 -u 10
 
 giss_T2011_h100:
-	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 100 -u 10
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 100 -u 10
 
 giss_T2011_h150:
-	$(MCMC1M) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 150 -u 10
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 150 -u 10
 
 h0_runs:
 	for X in giss_T2011_h{50,100,150}; do qmake $${X} 4 16; done
+
+giss_T2011_h50_od4:
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 50 -u 4
+
+giss_T2011_h100_od4:
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 100 -u 4
+
+giss_T2011_h150_od4:
+	$(MCMC) -z 1900 -Z 1929 -d ../results/brick_mcmc_fgiss_sinf_t18802011_z19001929_o4_n10000000.rds -t 1880 -T 2011 -f giss -H 150 -u 4
+
+h0_od4_runs:
+	for X in giss_T2011_h{50,100,150}_od4; do qmake $${X} 4 16; done
 
 
 ### POST-PROCESS
