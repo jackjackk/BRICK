@@ -1,6 +1,11 @@
-temp: HadCRUT.4.6.0.0.annual_ns_avg.txt HadCRUT.4.6.0.0.annual_ns_avg_realisations
+temp: HadCRUT.4.6.0.0.annual_ns_avg.txt HadCRUT.4.6.0.0.annual_ns_avg_realisations temp_giss
 
 forc: forcing_hindcast_giss.csv forcing_hindcast_urban.csv
+
+temp_giss: GLB.Ts+dSST.csv
+
+GLB.Ts+dSST.csv:
+	curl https://data.giss.nasa.gov/gistemp/tabledata_v3/GLB.Ts+dSST.csv -O
 
 HadCRUT.4.6.0.0.annual_ns_avg.txt:
 	curl https://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/time_series/HadCRUT.4.6.0.0.annual_ns_avg.txt -O
