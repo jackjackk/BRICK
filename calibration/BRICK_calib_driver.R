@@ -40,6 +40,7 @@ option_list = list(
   make_option(c("-T", "--endyear"), type="integer", default=2009, help="end year of calibration"),
   make_option(c("-v", "--hadcrutv"), type="integer", default=4, help="version of HadCRUT dataset for temperature"),
   make_option(c("-f", "--forcing"), type="character", default="urban", help="forcing dataset in {urban,giss}"),
+  make_option(c("-F", "--temp"), type="character", default="hadcrut", help="temperature dataset in {hadcrut,giss}"),
   make_option(c("-s", "--sprior"), type="character", default="inf", help="prior for climate sensitivity in {inf, uninf}"),
   make_option(c("-x", "--save"), type="character", default="rds", help="save either via 'workspace' or 'rds'"),
   make_option(c("-o", "--outdir"), type="character", default="../scratch", help="output directory, no trailing slash"),
@@ -60,8 +61,9 @@ print(str(opt))
 stopifnot(dir.exists(opt$outdir))
 
 ## Build output file path
-rdsfile = sprintf("brick_mcmc_f%s_s%s_t%d%d_z%d%d_o%d_h%d_n%d.rds",
+rdsfile = sprintf("brick_mcmc_f%s_T%s_s%s_t%d%d_z%d%d_o%d_h%d_n%d.rds",
                      opt$forcing,
+                     opt$temp,                  
                      opt$sprior,
                      opt$begyear,
                      opt$endyear,                     

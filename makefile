@@ -33,9 +33,9 @@ init: scratch results
 ### RUN ###
 
 R := $$(which Rscript) --vanilla
-MCMC := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n $(NITER) -N 4
+MCMC := cd calibration && $(R) BRICK_calib_driver.R -n $(NITER) -N 4
 MCMC1M := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 1000000 -N 4
-MCMC_TEST := cd $(HOME)/$(BASENAME)/calibration && $(R) BRICK_calib_driver.R -n 10000 -N 2
+MCMC_TEST := cd calibration && $(R) BRICK_calib_driver.R -n 10000 -N 2
 
 bounds: results/bounds.csv
 
@@ -56,7 +56,48 @@ test_runs:
 clean:
 	rm -v scratch/*.rds 
 
+## 16 runs
+
 all_runs:
+	for F in {urban,giss}; do for T in {hadcrut,giss}; do for CS in {inf,uninf}; do for OD in {4,10}; do qmake f$${F}_t$${T}_s$${CS}_o$${OD} 4 16; done; done; done; done
+
+furban_thadcrut_sinf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s inf -u 4
+furban_thadcrut_sinf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s inf -u 10
+furban_thadcrut_suninf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s uninf -u 4
+furban_thadcrut_suninf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s uninf -u 10
+furban_tgiss_sinf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s inf -u 4
+furban_tgiss_sinf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s inf -u 10
+furban_tgiss_suninf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s uninf -u 4
+furban_tgiss_suninf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s uninf -u 10
+fgiss_thadcrut_sinf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s inf -u 4
+fgiss_thadcrut_sinf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s inf -u 10
+fgiss_thadcrut_suninf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s uninf -u 4
+fgiss_thadcrut_suninf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s uninf -u 10
+fgiss_tgiss_sinf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s inf -u 4
+fgiss_tgiss_sinf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s inf -u 10
+fgiss_tgiss_suninf_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 4
+fgiss_tgiss_suninf_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 10
+
+
+## Previous exploratory runs
+
+prev_all_runs:
 	for X in {default,urban_z1900,urban_t1880,giss_T2009,giss_T2011,giss_T2015}; do qmake $${X} 4 16; done
 
 1880_runs:
@@ -70,6 +111,9 @@ default:
 
 urban_z1900:
 	$(MCMC) -z 1900 -Z 1929
+
+giss_temp:
+	$(MCMC_TEST) -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss
 
 urban_t1880:
 	$(MCMC) -z 1900 -Z 1929 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 

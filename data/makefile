@@ -5,7 +5,7 @@ forc: forcing_hindcast_giss.csv forcing_hindcast_urban.csv
 temp_giss: GLB.Ts+dSST.csv
 
 GLB.Ts+dSST.csv:
-	curl https://data.giss.nasa.gov/gistemp/tabledata_v3/GLB.Ts+dSST.csv -O
+	curl 'https://data.giss.nasa.gov/gistemp/tabledata_v3/GLB.Ts+dSST.csv' | sed '1,2d;s/^\(18.*\)$/\1 .08/;s/^\([12][90].*\)$/\1 .05/;s/\./0./g' | tr \, ' '  > 'GLB.Ts+dSST.csv'
 
 HadCRUT.4.6.0.0.annual_ns_avg.txt:
 	curl https://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/time_series/HadCRUT.4.6.0.0.annual_ns_avg.txt -O
