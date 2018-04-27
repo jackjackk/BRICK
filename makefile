@@ -94,6 +94,43 @@ fgiss_tgiss_suninf_o4:
 fgiss_tgiss_suninf_o10:
 	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 10
 
+## Try higher OD bounds
+high_od:
+	for F in {urban,giss}; do for T in {hadcrut,giss}; do for CS in {inf,uninf}; do for OD in {50,100}; do qmake f$${F}_t$${T}_s$${CS}_o$${OD} 4 16; done; done; done; done
+
+furban_thadcrut_sinf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s inf -u 50
+furban_thadcrut_suninf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s uninf -u 50
+furban_tgiss_sinf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s inf -u 50
+furban_tgiss_suninf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s uninf -u 50
+fgiss_thadcrut_sinf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s inf -u 50
+fgiss_thadcrut_suninf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s uninf -u 50
+fgiss_tgiss_sinf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s inf -u 50
+fgiss_tgiss_suninf_o50:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 50
+
+furban_thadcrut_sinf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s inf -u 100
+furban_thadcrut_suninf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s uninf -u 100
+furban_tgiss_sinf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s inf -u 100
+furban_tgiss_suninf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s uninf -u 100
+fgiss_thadcrut_sinf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s inf -u 100
+fgiss_thadcrut_suninf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s uninf -u 100
+fgiss_tgiss_sinf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s inf -u 100
+fgiss_tgiss_suninf_o100:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 100
 
 ## Previous exploratory runs
 
