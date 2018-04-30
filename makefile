@@ -43,7 +43,7 @@ results/bounds.csv:
 	cd calibration && $(R) write_bounds.R -m none
 
 test:
-	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2
+	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2 -s lognorm
 
 test_runs: 
 	$(MCMC_TEST) -d 1 
@@ -131,6 +131,29 @@ fgiss_tgiss_sinf_o100:
 	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s inf -u 100
 fgiss_tgiss_suninf_o100:
 	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s uninf -u 100
+
+## Try lognorm S prior
+slognorm:
+	for F in {urban,giss}; do for T in {hadcrut,giss}; do for OD in {4,10}; do qmake slognorm_f$${F}_t$${T}_o$${OD} 4 16; done; done; done
+
+slognorm_furban_thadcrut_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s lognorm -u 4
+slognorm_furban_tgiss_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s lognorm -u 4
+slognorm_fgiss_thadcrut_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s lognorm -u 4
+slognorm_fgiss_tgiss_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s lognorm -u 4
+
+slognorm_furban_thadcrut_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s lognorm -u 10
+slognorm_furban_tgiss_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s lognorm -u 10
+slognorm_fgiss_thadcrut_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s lognorm -u 10
+slognorm_fgiss_tgiss_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s lognorm -u 10
+
 
 ## Previous exploratory runs
 

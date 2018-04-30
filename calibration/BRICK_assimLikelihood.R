@@ -258,7 +258,7 @@ if(FALSE) {
 ##==============================================================================
 ## (log of the) prior probability
 log.pri = function(parameters.in , parnames.in, bound.lower.in, bound.upper.in,
-                    shape.in, scale.in, l.informed.prior.S )
+                    shape.in, scale.in, l.prior.S )
 {
 
 	# Pluck off the model and statistical parameters (only ones without uniform prior)
@@ -270,14 +270,21 @@ log.pri = function(parameters.in , parnames.in, bound.lower.in, bound.upper.in,
 
 	in.range.vec = ((parameters.in >= bound.lower.in) & (parameters.in <= bound.upper.in))
 	in.range = all(in.range.vec)
-	if(l.informed.prior.S) {
+	if(l.prior.S == "cauchy") {
         S = parameters.in[ind.S]
-    	lpri.S = log(dcauchy(S,location=3,scale=2) / 	# S has truncated Cauchy(3,2) prior
+    	lpri.S = log(dcauchy(S,location=3,scale=2) / 	# truncated Cauchy(3,2) prior
     		(pcauchy(bound.upper.in[1],location=3,scale=2)-pcauchy(bound.lower.in[1],location=3,scale=2)))
-
+	} else if(l.prior.S == "lognorm") {
+        S = parameters.in[ind.S]
+        s.prior.lognorm.mean = 1.2672 # s.t. CDF(0.48*a*ln(2)) == 2.5/100 && CDF(1.91*a*ln(2)) = 97.5/100
+        s.prior.lognorm.sd = 0.3523   #      where a = 5.35
+    	lpri.S = log(dlnorm(S,meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd) / 	# truncated lognorm prior
+    		(plnorm(bound.upper.in[1],meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd)-plnorm(bound.lower.in[1],meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd)))
+    } else if(l.prior.S == "unif") {
+        lpri.S = 0
 	} else {
-	  lpri.S = 0
-	}
+        stop("CS prior ", l.prior.S, " not  supported")
+    }
 
 	if(in.range){
 		lpri.uni = 0									# Sum of all uniform priors (log(1)=0)
@@ -298,7 +305,7 @@ log.post = function(  parameters.in,
                       bound.lower.in,
                       bound.upper.in,
                       l.project=FALSE,
-		      l.informed.prior.S=FALSE,
+        		      l.prior.S="unif",
                       rho.simple.in=NULL,
                       sigma.simple.in=NULL,
                       shape.in,
@@ -323,7 +330,7 @@ log.post = function(  parameters.in,
                   parnames.in=parnames.in,
                   bound.lower.in=bound.lower.in,
                   bound.upper.in=bound.upper.in,
-		  l.informed.prior.S=l.informed.prior.S,
+		  l.prior.S=l.prior.S,
                   shape.in=shape.in,
                   scale.in=scale.in )
   if(is.finite(lpri)) { # evaluate likelihood if nonzero prior probability

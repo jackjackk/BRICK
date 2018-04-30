@@ -41,7 +41,7 @@ option_list = list(
   make_option(c("-v", "--hadcrutv"), type="integer", default=4, help="version of HadCRUT dataset for temperature"),
   make_option(c("-f", "--forcing"), type="character", default="urban", help="forcing dataset in {urban,giss}"),
   make_option(c("-F", "--temp"), type="character", default="hadcrut", help="temperature dataset in {hadcrut,giss}"),
-  make_option(c("-s", "--sprior"), type="character", default="inf", help="prior for climate sensitivity in {inf, uninf}"),
+  make_option(c("-s", "--sprior"), type="character", default="cauchy", help="prior for climate sensitivity in {unif, cauchy, lognorm}"),
   make_option(c("-x", "--save"), type="character", default="rds", help="save either via 'workspace' or 'rds'"),
   make_option(c("-o", "--outdir"), type="character", default="../scratch", help="output directory, no trailing slash"),
   make_option(c("-z", "--firstnormyear"), type="integer", default=1850, help="beginning of the interval used to normalize temp data"),
@@ -92,7 +92,7 @@ set.seed(1234)
 #set.seed(as.double(Sys.time())) # should yield same distributions... (a good test!)
 
 ## Prior flag
-l.informed.prior.S <- (opt$sprior == "inf")
+l.prior.S <- opt$sprior
 
 ## Do you want to use RCP8.5 to make projections? (l.project=TRUE)
 ## Or do you want to use historical data to make hindcasts? (l.project=FALSE)
@@ -421,7 +421,7 @@ t.beg=proc.time()                    # save timing (running millions of iteratio
         if(identical(head(strsplit(basename(opt$deoptim_iter),"_")[[1]], -1), head(strsplit(basename(rdsfile),"_")[[1]], -1))) {
 print(sprintf("Extending MCMC chain in %s", opt$deoptim_iter))
 amcmc.out1 = MCMC.add.samples(amcmc.par1[[1]], niter.mcmc,
-                    parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
+                    parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.prior.S=l.prior.S,
                     #slope.Ta2Tg.in=slope.Ta2Tg    , intercept.Ta2Tg.in=intercept.Ta2Tg,
                     ind.norm.data=ind.norm.data    , ind.norm.sl=ind.norm       , mod.time=mod.time              ,
                     oidx = oidx.all                , midx = midx.all            , obs=obs.all                    ,
@@ -431,7 +431,7 @@ amcmc.out1 = MCMC.add.samples(amcmc.par1[[1]], niter.mcmc,
 } else {
 amcmc.out1 = MCMC(log.post, niter.mcmc, p0.deoptim, scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
                   gamma=gamma.mcmc               , list=TRUE                  , n.start=round(0.01*niter.mcmc),
-                  parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
+                  parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.prior.S=l.prior.S,
                   #slope.Ta2Tg.in=slope.Ta2Tg    , intercept.Ta2Tg.in=intercept.Ta2Tg,
                   ind.norm.data=ind.norm.data    , ind.norm.sl=ind.norm       , mod.time=mod.time             ,
                   oidx = oidx.all                , midx = midx.all            , obs=obs.all                   ,
@@ -445,7 +445,7 @@ amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc,
                   dyn.libs=c('../fortran/doeclim.so','../fortran/brick_te.so','../fortran/brick_tee.so','../fortran/gsic_magicc.so','../fortran/simple.so'),
                   scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
                   gamma=gamma.mcmc, list=TRUE, n.start=round(0.01*niter.mcmc),
-                  parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.informed.prior.S=l.informed.prior.S,
+                  parnames.in=parnames           , forcing.in=forcing         , l.project=l.project           , l.prior.S=l.prior.S,
                   #slope.Ta2Tg.in=slope.Ta2Tg    , intercept.Ta2Tg.in=intercept.Ta2Tg,
                   ind.norm.data=ind.norm.data    , ind.norm.sl=ind.norm       , mod.time=mod.time             ,
                   oidx = oidx.all                , midx = midx.all            , obs=obs.all                   ,
