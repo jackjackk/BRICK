@@ -41,6 +41,7 @@ option_list = list(
   make_option(c("-v", "--hadcrutv"), type="integer", default=4, help="version of HadCRUT dataset for temperature"),
   make_option(c("-f", "--forcing"), type="character", default="urban", help="forcing dataset in {urban,giss}"),
   make_option(c("-F", "--temp"), type="character", default="hadcrut", help="temperature dataset in {hadcrut,giss}"),
+  make_option(c("-O", "--oheat"), type="character", default="gour", help="ocean heat dataset in {gour,cheng}"),
   make_option(c("-s", "--sprior"), type="character", default="cauchy", help="prior for climate sensitivity in {unif, cauchy, lognorm}"),
   make_option(c("-x", "--save"), type="character", default="rds", help="save either via 'workspace' or 'rds'"),
   make_option(c("-o", "--outdir"), type="character", default="../scratch", help="output directory, no trailing slash"),

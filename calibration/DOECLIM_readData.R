@@ -65,7 +65,13 @@ iend=which(obs.temp.time==opt$lastnormyear)
 obs.temp = obs.temp - mean(obs.temp[ibeg:iend])
 
 # annual global ocean heat content (0-3000 m)
-dat = read.table("../data/gouretski_ocean_heat_3000m.txt",skip=1)
+if (opt$oheat == 'gour') {
+    dat = read.table("../data/gouretski_ocean_heat_3000m.txt",skip=1)
+} else if (opt$oheat == 'cheng') {
+    dat = read.table("../data/cheng_ohc.txt",skip=1)
+} else {
+    stop("Ocean heat dataset", opt$oheat, "not supported")
+}
 obs.ocheat = dat[,2]
 obs.ocheat.time = dat[,1]
 obs.ocheat.err = dat[,3]

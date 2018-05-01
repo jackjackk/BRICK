@@ -43,7 +43,7 @@ results/bounds.csv:
 	cd calibration && $(R) write_bounds.R -m none
 
 test:
-	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2 -s lognorm
+	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2 -s lognorm -O gour
 
 test_runs: 
 	$(MCMC_TEST) -d 1 
@@ -153,6 +153,28 @@ slognorm_fgiss_thadcrut_o10:
 	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s lognorm -u 10
 slognorm_fgiss_tgiss_o10:
 	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s lognorm -u 10
+
+## Try cheng ocean heat dataset
+ocheng:
+	for F in {urban,giss}; do for T in {hadcrut,giss}; do for OD in {4,10}; do qmake ocheng_f$${F}_t$${T}_o$${OD} 4 16; done; done; done
+
+ocheng_furban_thadcrut_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s cauchy -u 4 -O cheng
+ocheng_furban_tgiss_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s cauchy -u 4 -O cheng
+ocheng_fgiss_thadcrut_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s cauchy -u 4 -O cheng
+ocheng_fgiss_tgiss_o4:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s cauchy -u 4 -O cheng
+
+ocheng_furban_thadcrut_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s cauchy -u 10 -O cheng
+ocheng_furban_tgiss_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s cauchy -u 10 -O cheng
+ocheng_fgiss_thadcrut_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s cauchy -u 10 -O cheng
+ocheng_fgiss_tgiss_o10:
+	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s cauchy -u 10 -O cheng
 
 
 ## Previous exploratory runs
