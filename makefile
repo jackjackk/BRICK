@@ -43,7 +43,7 @@ results/bounds.csv:
 	cd calibration && $(R) write_bounds.R -m none
 
 test:
-	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2 -s lognorm -O gour
+	cd calibration && Rscript --vanilla BRICK_calib_driver.R -n 10000 -N 2 -s lognorm -O cheng
 
 test_runs: 
 	$(MCMC_TEST) -d 1 
