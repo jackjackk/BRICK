@@ -161,43 +161,43 @@ spaleosens_fgiss_tgiss_o10:
 
 ## Try chylek S prior
 schylek:
-	for F in {urban,giss}; do for T in {hadcrut,giss}; do for OD in {4,10}; do for OC in {gour,cheng}; do qmake schylek_f$${F}_t$${T}O$${OC}_o$${OD} 4 16 1 kzk10_a_g_sc_default; done; done; done; done
+	for F in {urban,giss}; do for T in {hadcrut,giss}; do for OD in {4,10}; do for OC in {gour,cheng}; do qmake schylek_f$${F}_t$${T}O$${OC}_o$${OD} 2 16 1; done; done; done; done
 
 schylek_furban_thadcrutOgour_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 4 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 4 -O gour
 schylek_furban_tgissOgour_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 4 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 4 -O gour
 schylek_fgiss_thadcrutOgour_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 4 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 4 -O gour
 schylek_fgiss_tgissOgour_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 4 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 4 -O gour
 
 schylek_furban_thadcrutOgour_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 10 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 10 -O gour
 schylek_furban_tgissOgour_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 10 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 10 -O gour
 schylek_fgiss_thadcrutOgour_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 10 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 10 -O gour
 schylek_fgiss_tgissOgour_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 10 -O gour
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 10 -O gour
 
 schylek_furban_thadcrutOcheng_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 4 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 4 -O cheng
 schylek_furban_tgissOcheng_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 4 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 4 -O cheng
 schylek_fgiss_thadcrutOcheng_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 4 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 4 -O cheng
 schylek_fgiss_tgissOcheng_o4:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 4 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 4 -O cheng
 
 schylek_furban_thadcrutOcheng_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 10 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F hadcrut -s chylek -u 10 -O cheng
 schylek_furban_tgissOcheng_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 10 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2009 -f urban -F giss -s chylek -u 10 -O cheng
 schylek_fgiss_thadcrutOcheng_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 10 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F hadcrut -s chylek -u 10 -O cheng
 schylek_fgiss_tgissOcheng_o10:
-	$(MCMC) -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 10 -O cheng
+	$(MCMC) -N 2 -H 150 -z 1880 -Z 1900 -d ../brick_mcmc_furban_sinf_t18802009_z19001929_o4_n100000.rds -t 1880 -T 2011 -f giss -F giss -s chylek -u 10 -O cheng
 
 
 ## Try cheng ocean heat dataset
