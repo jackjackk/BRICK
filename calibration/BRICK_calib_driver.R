@@ -62,9 +62,10 @@ print(str(opt))
 stopifnot(dir.exists(opt$outdir))
 
 ## Build output file path
-rdsfile = sprintf("brick_mcmc_f%s_T%s_s%s_t%d%d_z%d%d_o%d_h%d_n%d.rds",
+rdsfile = sprintf("brick_mcmc_f%s_T%sO%s_s%s_t%d%d_z%d%d_o%d_h%d_n%d.rds",
                      opt$forcing,
-                     opt$temp,                  
+                     opt$temp,
+                     opt$oheat,
                      opt$sprior,
                      opt$begyear,
                      opt$endyear,                     

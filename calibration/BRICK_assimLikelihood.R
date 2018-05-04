@@ -274,12 +274,15 @@ log.pri = function(parameters.in , parnames.in, bound.lower.in, bound.upper.in,
         S = parameters.in[ind.S]
     	lpri.S = log(dcauchy(S,location=3,scale=2) / 	# truncated Cauchy(3,2) prior
     		(pcauchy(bound.upper.in[1],location=3,scale=2)-pcauchy(bound.lower.in[1],location=3,scale=2)))
-	} else if(l.prior.S == "lognorm") {
+	} else if(l.prior.S == "paleosens") {
         S = parameters.in[ind.S]
         s.prior.lognorm.mean = 1.2672 # s.t. CDF(0.48*a*ln(2)) == 2.5/100 && CDF(1.91*a*ln(2)) = 97.5/100
         s.prior.lognorm.sd = 0.3523   #      where a = 5.35
     	lpri.S = log(dlnorm(S,meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd) / 	# truncated lognorm prior
     		(plnorm(bound.upper.in[1],meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd)-plnorm(bound.lower.in[1],meanlog=s.prior.lognorm.mean,sdlog=s.prior.lognorm.sd)))
+    } else if(l.prior.S == "chylek") {
+        S = parameters.in[ind.S]
+    	lpri.S = log(truncnorm::dtruncnorm(S, a=bound.lower.in[1], b=bound.upper.in[1], mean=1.8, sd=0.5242))
     } else if(l.prior.S == "unif") {
         lpri.S = 0
 	} else {

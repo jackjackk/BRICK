@@ -24,6 +24,8 @@
 ## along with BRICK.  If not, see <http://www.gnu.org/licenses/>.
 ##==============================================================================
 
+install.packages("devtools")
+install.packages("optparse")
 install.packages('adaptMCMC')
 #install.packages('compiler')
 install.packages('DEoptim')
@@ -43,6 +45,7 @@ install.packages('pscl')
 install.packages('RColorBrewer')
 install.packages('sensitivity')
 install.packages('sn')
+devtools::install_github("olafmersmann/truncnorm")
 #install.packages('stats')
 
 ##==============================================================================
