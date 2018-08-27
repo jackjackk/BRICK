@@ -309,7 +309,7 @@ log.post = function(  parameters.in,
                       i0,
                       l.aisfastdy=TRUE
                       ){
-
+  print(parameters.in)
   llik = 0
 	lpri = log.pri( parameters.in=parameters.in,
                   parnames.in=parnames.in,
@@ -342,6 +342,7 @@ log.post = function(  parameters.in,
   } else {
   	lpost = -Inf
   }
+  print(c(llik,lpri,lpost))
   return(lpost)
 }
 ##==============================================================================

@@ -28,12 +28,12 @@
 rm(list=ls())                        # Clear all previous variables
 
 ## Switch to your BRICK calibration directory
-setwd('/home/scrim/axw322/codes/BRICK/calibration')
+#setwd('/home/scrim/axw322/codes/BRICK/calibration')
 #setwd('/Users/tony/codes/BRICK/calibration')
 
 ## Set up MCMC stuff here so that it can be automated for HPC
-nnode_mcmc000 <- 8
-niter_mcmc000 <- 2e6
+nnode_mcmc000 <- 1
+niter_mcmc000 <- 10000
 
 ## Show plots? (probably want FALSE on HPC, non-interactive)
 l.doplots <- FALSE
@@ -215,7 +215,7 @@ source('../R/BRICK_coupledModel.R')
 library(DEoptim)
 source('../calibration/BRICK_DEoptim.R')
 p0.deoptim=p0                          # initialize optimized initial parameters
-niter.deoptim=200                      # number of iterations for DE optimization
+niter.deoptim=1                      # number of iterations for DE optimization
 NP.deoptim=11*length(index.model)      # population size for DEoptim (do at least 10*[N parameters])
 F.deoptim=0.8                          # as suggested by Storn et al (2006)
 CR.deoptim=0.9                        # as suggested by Storn et al (2006)
@@ -344,13 +344,13 @@ accept.mcmc = 0.234               # Optimal as # parameters->infinity
                                   # (Gelman et al, 1996; Roberts et al, 1997)
 niter.mcmc = niter_mcmc000        # number of iterations for MCMC
 nnode.mcmc = nnode_mcmc000        # number of nodes for parallel MCMC
-gamma.mcmc = 0.5                  # rate of adaptation (between 0.5 and 1, lower is faster adaptation)
+gamma.mcmc = 0.6                  # rate of adaptation (between 0.5 and 1, lower is faster adaptation)
 burnin = round(niter.mcmc*0.5)    # remove first ?? of chains for burn-in (not used)
 stopadapt.mcmc = round(niter.mcmc*1.0)# stop adapting after ?? iterations? (niter*1 => don't stop)
 
 ##==============================================================================
 ## Actually run the calibration
-if(FALSE){
+if(TRUE){
 t.beg=proc.time()                      # save timing (running millions of iterations so best to have SOME idea...)
 amcmc.out1 = MCMC(log.post, niter.mcmc, p0.deoptim, scale=step.mcmc, adapt=TRUE, acc.rate=accept.mcmc,
                   gamma=gamma.mcmc               , list=TRUE                  , n.start=round(0.01*niter.mcmc),
@@ -381,7 +381,7 @@ chain1 = amcmc.extend1$samples
 }
 
 ## If you want to run 2 (or more) chains in parallel (save time, more sampling)
-if(TRUE){
+if(FALSE){
 t.beg=proc.time()                    # save timing (running millions of iterations so best to have SOME idea...)
 amcmc.par1 = MCMC.parallel(log.post, niter.mcmc, p0.deoptim, n.chain=nnode.mcmc, n.cpu=nnode.mcmc,
                   dyn.libs=c('../fortran/doeclim.so','../fortran/brick_te.so','../fortran/brick_tee.so','../fortran/gsic_magicc.so','../fortran/simple.so'),
